@@ -1,90 +1,13 @@
 #include "bestimmung.h"
 
+// ###################################
+// ############ SETTER ###############
+// ###################################
+
 // Setzt IP-Adresse
 void bestimmung::set_ip_adresse(QString adresse)
 {
     this->ip_adresse = adresse;
-}
-
-// Gibt IP-Adresse zurück
-QString bestimmung::get_ip_adresse()
-{
-    return this->ip_adresse;
-}
-
-// Teilt IP-Adresse in Vier Blöcke anhand der Punkte "."
-void bestimmung::splitter()
-{
-    QString speicher = get_ip_adresse();
-    QString out = "";
-    int array_index = 0;
-
-    for(int i = 0, l = speicher.size(); i <= l; i++)
-    {
-        if(speicher[i] == "." || i == l)    // Wird True wenn "." gefunden wird oder Ende der IP-Adresse
-        {
-            to_array(out.toInt(), array_index);
-            array_index++;
-            out.clear();
-        }
-        else
-        {
-           out.append(speicher[i]);         // Gibt Block der Adresse zurück
-        }
-    }
-
-    //this->array_size = array_index;
-}
-
-// Setzt IP-Adress Block in Array
-void bestimmung::to_array(int block, int array_index)
-{
-    this->array[array_index] = block;
-}
-
-// Gibt IP-Adress Block zurück
-int bestimmung::get_array(int index)
-{
-    return this->array[index];
-}
-
-// Kann weg
-int bestimmung::get_array_size()
-{
-    return this->array_size;
-}
-
-// Wandelt Adress Block (Dez) in Bin um
-// Wird Automatisiert, um direkt alle Blöcke um zuwandeln
-QString bestimmung::to_bin(int part_array)
-{
-    int speicher = part_array;
-    QString bin = "";
-    QString out = "";
-
-    for(int i = 0; speicher > 0; i++) // Dezimal zu Binär
-    {
-        if(speicher % 2 == 0)       // Wenn durch zwei Teilbar dann "0"
-        {
-            bin.append("0");
-        }
-        else                        // Wenn Rest dann "1"
-        {
-            bin.append("1");
-        }
-        speicher = speicher / 2;
-    }
-
-    for(int i = bin.size(); i < 8; i++) // Nullen auffüllen
-    {
-        out.append("0");
-    }
-
-    for(int i = 0, l = bin.size() -1; i <= l; i++) // Dreht den String um
-    {
-        out.append(bin[l - i]);
-    }
-    return out;         // Gibt Block als Binär zurück
 }
 
 // Setz Adress Block (Bin) in Array
@@ -93,46 +16,10 @@ void bestimmung::set_bin_out(QString bin_out_index, int index)
     this->bin_out[index] = bin_out_index;
 }
 
-// Gibt Adress Block (Bin) zurück
-QString bestimmung::get_bin_out(int index)
-{
-    return bin_out[index];
-}
-
-// "Main Function" Gibt Reihenfolge der Funktionen an
-void bestimmung::output()
-{
-    splitter(); // 1. Teilt IP-Adresse in 4 Blöcke (Array)
-
-    set_bin_out(to_bin(array[0]),0);        //2. Setzt und wandelt Block für Block Binär (Array)
-    set_bin_out(to_bin(array[1]),1);
-    set_bin_out(to_bin(array[2]),2);
-    set_bin_out(to_bin(array[3]),3);
-
-    count_hosts();
-
-    set_total_bin();                        // Macht aus den 4 Binär Blöcken ein String (Array to String)
-    fill_total_bin_complete();              // Macht aus den den vier Blöcken ein String (Array -> String)
-
-    fill_subnet_mask();                     // Füllt Subnetz Maske mit "0" / "1" anhand von Netzanteil
-
-    set_net_ID();                           // Setz Net ID anhand von Subnetzmaske und Total Bin
-
-    fill_inv_subnet_mask();
-
-    set_broadcast();
-}
-
 // Setz Netzanteil
 void bestimmung::set_netzanteil(int anteil)
 {
     this->netzanteil = anteil;
-}
-
-// Gibt Netzanteil zurück
-int bestimmung::get_netzanteil()
-{
-    return this->netzanteil;
 }
 
 // Macht aus den 4 Binär Blöcken ein String (Array to String)
@@ -150,49 +37,6 @@ void bestimmung::set_total_bin()
             index++;
         }
     }
-}
-
-// Gibt total bin zurück
-QString bestimmung::get_total_bin(int index)
-{
-    return this->total_bin[index];
-}
-
-// Füllt Subnetzmaske
-void bestimmung::fill_subnet_mask()
-{
-    int anteil = get_netzanteil();
-
-    for(int i = 0; i < anteil; i++)         // Alles bis angebenem Netzanteil wird "1" gesetzt
-    {
-        this->subnetz_maske.append("1");
-    }
-
-    for(int i = anteil;i < 32; i++)         // Alles danach wird "0" gesetzt
-    {
-        this->subnetz_maske.append("0");
-    }
-}
-
-// Gibt Subnetz Maske zurück
-QString bestimmung::get_subnet_mask()
-{
-    return this->subnetz_maske;
-}
-
-// Füllt String mit 4 Bin Adress Blöcken
-void bestimmung::fill_total_bin_complete()
-{
-    for(int i = 0; i < 4; i++)
-    {
-        this->total_bin_complete.append(get_bin_out(i));
-    }
-}
-
-// gibt total_bin_complete zurück
-QString bestimmung::get_total_bin_complete()
-{
-    return this->total_bin_complete;
 }
 
 // Setz net_ID
@@ -233,47 +77,67 @@ void bestimmung::set_net_ID()
     }
 }
 
+// #######################################
+// ################ GETTER ###############
+// #######################################
+
+// Gibt IP-Adresse zurück
+QString bestimmung::get_ip_adresse()
+{
+    return this->ip_adresse;
+}
+
+// Gibt IP-Adress Block zurück
+int bestimmung::get_array(int index)
+{
+    return this->array[index];
+}
+
+// Kann weg
+int bestimmung::get_array_size()
+{
+    return this->array_size;
+}
+
+// Gibt Adress Block (Bin) zurück
+QString bestimmung::get_bin_out(int index)
+{
+    return bin_out[index];
+}
+
+// Gibt Netzanteil zurück
+int bestimmung::get_netzanteil()
+{
+    return this->netzanteil;
+}
+
+// Gibt total bin zurück
+QString bestimmung::get_total_bin(int index)
+{
+    return this->total_bin[index];
+}
+
+// Gibt Subnetz Maske zurück
+QString bestimmung::get_subnet_mask()
+{
+    return this->subnetz_maske;
+}
+
+// gibt total_bin_complete zurück
+QString bestimmung::get_total_bin_complete()
+{
+    return this->total_bin_complete;
+}
+
 // Gibt net_ID zurück
 QString bestimmung::get_net_ID()
 {
     return this->net_ID;
 }
 
-// Wandelt binär in dezimal um
-// Wird für GUI benötigt umd Subnetzmaske & Net ID in Dez darzustellen
-void bestimmung::to_dez(QString bin_dez)
-{
-    QString umwandeln = bin_dez;
-
-    int index = 0;
-
-    for(int i = 0; i < 4; i++)                              // 4 mal da 4 Blöcke
-    {
-        QString part_string = "";
-        int part_dez = 0;
-
-        for(int potenz = 7; potenz >= 0; potenz--)          // Fängt bei 2^7 an und geht herunter
-        {                                                   // da 128 / 64 / 32 / 16 / 8 / 4 / 2 / 1
-            part_string = umwandeln[index];                 // Multipliziert dann char für char mit x Potenz von 2
-            if(part_string != '0')
-            {
-                part_dez += pow(2,potenz);
-            }
-            index++;
-        }
-        this->dez_conv.append(QString::number(part_dez));   // Convertierte Zahlen werden an Variable übergeben
-
-        if(i < 3)                                           // Fügt "." hinzu
-        {
-            this->dez_conv.append(".");
-        }
-    }
-}
-
 // Gibt Convertierte net_ID zurück
 QString bestimmung::get_dez_conv_net_id()
 {
-    this->dez_conv = "";
     to_dez(net_ID);
     return this->dez_conv;
 }
@@ -281,25 +145,8 @@ QString bestimmung::get_dez_conv_net_id()
 // Gibt Convertierte Subnetz Maske zurück
 QString bestimmung::get_dez_conv_subnet_mark()
 {
-    this->dez_conv = "";
     to_dez(subnetz_maske);
     return this->dez_conv;
-}
-
-// Füllt Invertiert Subnetz Maskse mit 0 / 1 nach dem Netzanteil
-void bestimmung::fill_inv_subnet_mask()
-{
-    int anteil = get_netzanteil();
-
-    for(int i = 0; i < anteil; i++)         // Alles bis angebenem Netzanteil wird "0" gesetzt
-    {
-        this->inv_subnetz_maske.append("0");
-    }
-
-    for(int i = anteil;i < 32; i++)         // Alles danach wird "1" gesetzt
-    {
-        this->inv_subnetz_maske.append("1");
-    }
 }
 
 // Gibt invertierte Subnetz Maske zurpck
@@ -311,12 +158,41 @@ QString bestimmung::get_inv_subnet_mask()
 // Gibt deziaml convertierte invertierte Subentz Maske zurück
 QString bestimmung::get_dez_conv_inv_subnet_mask()
 {
-    this->dez_conv = "";
     to_dez(inv_subnetz_maske);
     return this->dez_conv;
 }
 
-// Setz Broadcast
+// Gibt Broadcast zurück
+QString bestimmung::get_broadcast()
+{
+    return this->broadcast;
+}
+
+// Gibt deziaml convertierten Broadcast zurück
+QString bestimmung::get_dez_conv_braodcast()
+{
+    to_dez(broadcast);
+    return this->dez_conv;
+}
+
+// Gibt Mögliche Hosts zurück
+int bestimmung::get_counted_hosts()
+{
+    return this->counted_hosts;
+}
+
+QString bestimmung::get_dez_conv_first_host()
+{
+    to_dez(first_host);
+    return this->dez_conv;
+}
+
+QString bestimmung::get_dez_conv_last_host()
+{
+    to_dez(last_host);
+    return this->dez_conv;
+}
+
 void bestimmung::set_broadcast()
 {
     QString mask = get_inv_subnet_mask();
@@ -351,18 +227,146 @@ void bestimmung::set_broadcast()
     }
 }
 
-// Gibt Broadcast zurück
-QString bestimmung::get_broadcast()
+// #######################################
+// ############ FUNTCTIONS ###############
+// #######################################
+
+
+// Teilt IP-Adresse in Vier Blöcke anhand der Punkte "."
+void bestimmung::splitter()
 {
-    return this->broadcast;
+    QString speicher = get_ip_adresse();
+    QString out = "";
+    int array_index = 0;
+
+    for(int i = 0, l = speicher.size(); i <= l; i++)
+    {
+        if(speicher[i] == "." || i == l)    // Wird True wenn "." gefunden wird oder Ende der IP-Adresse
+        {
+            to_array(out.toInt(), array_index);
+            array_index++;
+            out.clear();
+        }
+        else
+        {
+           out.append(speicher[i]);         // Gibt Block der Adresse zurück
+        }
+    }
+
+    //this->array_size = array_index;
 }
 
-// Gibt deziaml convertierten Broadcast zurück
-QString bestimmung::get_dez_conv_braodcast()
+// Setzt IP-Adress Block in Array
+void bestimmung::to_array(int block, int array_index)
+{
+    this->array[array_index] = block;
+}
+
+// Wandelt Adress Block (Dez) in Bin um
+// Wird Automatisiert, um direkt alle Blöcke um zuwandeln
+QString bestimmung::to_bin(int part_array)
+{
+    bitset<8> test(part_array);
+
+    int speicher = part_array;
+    QString bin = "";
+    QString out = "";
+
+    for(int i = 0; speicher > 0; i++) // Dezimal zu Binär
+    {
+        if(speicher % 2 == 0)       // Wenn durch zwei Teilbar dann "0"
+        {
+            bin.append("0");
+        }
+        else                        // Wenn Rest dann "1"
+        {
+            bin.append("1");
+        }
+        speicher = speicher / 2;
+    }
+
+    for(int i = bin.size(); i < 8; i++) // Nullen auffüllen
+    {
+        out.append("0");
+    }
+
+    for(int i = 0, l = bin.size() -1; i <= l; i++) // Dreht den String um
+    {
+        out.append(bin[l - i]);
+    }
+    return out;         // Gibt Block als Binär zurück
+}
+
+// Füllt Subnetzmaske
+void bestimmung::fill_subnet_mask()
+{
+    int anteil = get_netzanteil();
+
+    for(int i = 0; i < anteil; i++)         // Alles bis angebenem Netzanteil wird "1" gesetzt
+    {
+        this->subnetz_maske.append("1");
+    }
+
+    for(int i = anteil;i < 32; i++)         // Alles danach wird "0" gesetzt
+    {
+        this->subnetz_maske.append("0");
+    }
+}
+
+// Füllt String mit 4 Bin Adress Blöcken
+void bestimmung::fill_total_bin_complete()
+{
+    for(int i = 0; i < 4; i++)
+    {
+        this->total_bin_complete.append(get_bin_out(i));
+    }
+}
+
+// Wandelt binär in dezimal um
+// Wird für GUI benötigt umd Subnetzmaske & Net ID in Dez darzustellen
+void bestimmung::to_dez(QString bin_dez)
 {
     this->dez_conv = "";
-    to_dez(broadcast);
-    return this->dez_conv;
+    QString umwandeln = bin_dez;
+    int index = 0;
+
+    for(int i = 0; i < 4; i++)                              // 4 mal da 4 Blöcke
+    {
+        QString part_string = "";
+        int part_dez = 0;
+
+        for(int potenz = 7; potenz >= 0; potenz--)          // Fängt bei 2^7 an und geht herunter
+        {                                                   // da 128 / 64 / 32 / 16 / 8 / 4 / 2 / 1
+            part_string = umwandeln[index];                 // Multipliziert dann char für char mit x Potenz von 2
+            if(part_string != '0')
+            {
+                part_dez += pow(2,potenz);
+            }
+            index++;
+        }
+        this->dez_conv.append(QString::number(part_dez));   // Convertierte Zahlen werden an Variable übergeben
+
+        if(i < 3)                                           // Fügt "." hinzu
+        {
+            this->dez_conv.append(".");
+        }
+    }
+}
+
+// Füllt Invertiert Subnetz Maskse mit 0 / 1 nach dem Netzanteil
+void bestimmung::fill_inv_subnet_mask()
+{
+    int anteil = get_netzanteil();
+
+    for(int i = 0; i < anteil; i++)         // Alles bis angebenem Netzanteil wird "0" gesetzt
+    {
+        this->inv_subnetz_maske.append("0");
+    }
+
+    for(int i = anteil;i < 32; i++)         // Alles danach wird "1" gesetzt
+    {
+        this->inv_subnetz_maske.append("1");
+    }
 }
 
 // Bestimmt mögliche Hosts im Netz
@@ -373,22 +377,35 @@ void bestimmung::count_hosts()
     this->counted_hosts = pow(2,potenz) - 2;
 }
 
-// Gibt Mögliche Hosts zurück
-int bestimmung::get_counted_hosts()
-{
-    return this->counted_hosts;
-}
+// #######################################
+// ########### MAIN FUNCTION #############
+// #######################################
 
-QString bestimmung::get_dez_conv_first_host()
+// "Main Function" Gibt Reihenfolge der Funktionen an
+void bestimmung::output()
 {
-    this->dez_conv = "";
-    to_dez(first_host);
-    return this->dez_conv;
-}
+    splitter(); // 1. Teilt IP-Adresse in 4 Blöcke (Array)
 
-QString bestimmung::get_dez_conv_last_host()
-{
-    this->dez_conv = "";
-    to_dez(last_host);
-    return this->dez_conv;
+    for(int i = 0; i < 4; i++)              //2. Setzt und wandelt Block für Block Binär (Array)
+    {
+        set_bin_out(to_bin(array[i]),i);
+    }
+
+    /*set_bin_out(to_bin(array[0]),0);
+    set_bin_out(to_bin(array[1]),1);
+    set_bin_out(to_bin(array[2]),2);
+    set_bin_out(to_bin(array[3]),3);*/
+
+    count_hosts();
+
+    set_total_bin();                        // Macht aus den 4 Binär Blöcken ein String (Array to String)
+    fill_total_bin_complete();              // Macht aus den den vier Blöcken ein String (Array -> String)
+
+    fill_subnet_mask();                     // Füllt Subnetz Maske mit "0" / "1" anhand von Netzanteil
+
+    set_net_ID();                           // Setz Net ID anhand von Subnetzmaske und Total Bin
+
+    fill_inv_subnet_mask();
+
+    set_broadcast();
 }

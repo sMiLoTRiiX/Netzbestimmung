@@ -4,6 +4,8 @@
 #include <qstring.h>
 #include <QDebug>
 #include <math.h>
+#include <bitset>
+using namespace std;
 
 class bestimmung
 {
